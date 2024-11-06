@@ -8,7 +8,7 @@ import 'loginscreen.dart';
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<Authservice>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),

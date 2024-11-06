@@ -3,9 +3,10 @@
 import 'package:codeedex_machinetest/model/usermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-class Authservice with ChangeNotifier {
+class AuthService with ChangeNotifier {
   User? _user;
   bool _isLoading = false;
 
@@ -34,6 +35,11 @@ class Authservice with ChangeNotifier {
       if (response.statusCode == 201 || response.statusCode == 200) {
         final data = json.decode(response.body);
         print('Login Response: $data');
+
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('access_token', data['access_token']);
+        await prefs.setString('refresh_token', data['refresh_token']);
+
         return true;
       } else {
         print('Login Failed - Status Code: ${response.statusCode}');
@@ -48,8 +54,23 @@ class Authservice with ChangeNotifier {
     }
   }
 
-  void logout() {
+  void logout() async {
     _user = null;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('access_token');
+    await prefs.remove('refresh_token');
+
     notifyListeners();
+  }
+
+  Future<String?> getAccessToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
+  }
+
+  Future<String?> getRefreshToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('refresh_token');
   }
 }

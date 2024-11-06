@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> login() async {
-    final authservice = Provider.of<Authservice>(context, listen: false);
+    final authservice = Provider.of<AuthService>(context, listen: false);
 
     final success = await authservice.login(
       emailController.text.trim(),
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
         title: const Text('Login'),
         centerTitle: true,
       ),
-      body: Consumer<Authservice>(builder: (context, authservice, child) {
+      body: Consumer<AuthService>(builder: (context, authservice, child) {
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
